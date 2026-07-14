@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Introduction to Ethical Hacking — Registration</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f3f4f6;
+    color: #1f2937;
+    margin: 0;
+    padding: 32px 16px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+
+  h1 { font-size: 1.7rem; margin-bottom: 4px; }
+  .sub { color: #6b7280; margin-top: 0; margin-bottom: 20px; font-size: 0.95rem; }
+
+  .info-card {
+    background: #111827;
+    color: #f9fafb;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    font-size: 0.88rem;
+  }
+  .info-card div span.label {
+    display: block;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  .spots {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 24px;
+  }
+  .spots strong { color: #111827; }
+
+  .schedule {
+    margin-bottom: 28px;
+  }
+  .schedule h2 {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+  }
+  .day {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+  }
+  .day .day-title {
+    font-weight: 700;
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+  }
+  .day ul.day-points {
+    margin: 0;
+    padding-left: 18px;
+    color: #6b7280;
+    font-size: 0.85rem;
+  }
+  .day ul.day-points li { margin-bottom: 2px; }
+  .day ul.day-points li:last-child { margin-bottom: 0; }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 22px;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+  }
+  label .hint {
+    font-weight: 400;
+    color: #9ca3af;
+    font-size: 0.78rem;
+  }
+  input {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 400;
+    padding: 9px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    color: #111827;
+  }
+  input:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+    border-color: #2563eb;
+  }
+
+  .pay-step {
+    border: 1px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pay-step .step-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+  }
+  .pay-step .step-desc {
+    font-size: 0.82rem;
+    color: #6b7280;
+    margin: -4px 0 0;
+  }
+  a.pay-link {
+    display: inline-block;
+    text-align: center;
+    background: #059669;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  a.pay-link:hover { background: #047857; }
+
+  .upi-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #6b7280;
+  }
+  .upi-fallback code {
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #111827;
+    font-size: 0.85rem;
+  }
+  .copy-btn {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    padding: 3px 9px;
+    border-radius: 5px;
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+  .copy-btn:hover { background: #f3f4f6; }
+
+  input[type="file"] {
+    font-size: 0.85rem;
+    padding: 7px;
+  }
+
+  button[type="submit"] {
+    margin-top: 6px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 11px 16px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button[type="submit"]:hover { background: #1d4ed8; }
+  button[type="submit"]:disabled { background: #93a5c9; cursor: not-allowed; }
+
+  .status {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .status.show { display: block; }
+  .status.success { background: #d1fae5; color: #065f46; }
+  .status.error { background: #fee2e2; color: #991b1b; }
+
+  .closed-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 28px 22px;
+    text-align: center;
+    color: #6b7280;
+  }
+  .closed-card h2 { color: #111827; margin-top: 0; font-size: 1.1rem; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Introduction to Ethical Hacking</h1>
+    <p class="sub">A 5-day hands-on workshop covering forensics, web exploitation, cryptography, reverse engineering, and binary exploitation.</p>
+
+    <div class="info-card">
+      <div><span class="label">Dates</span>27th – 31st July</div>
+      <div><span class="label">Time</span>5:30 PM – 7:30 PM</div>
+      <div><span class="label">Venue</span>Ground Floor Computer Lab</div>
+      <div><span class="label">Price</span>₹999</div>
+    </div>
+
+    <div class="spots" id="spotsLabel"></div>
+
+    <div class="schedule">
+      <h2>Schedule</h2>
+
+      <div class="day">
+        <div class="day-title">Day 1 — File Forensics: PNG File Structure</div>
+        <ul class="day-points">
+          <li>Password cracking</li>
+          <li>Basics of networking</li>
+          <li>Steganography and its tools</li>
+        </ul>
+      </div>
+
+      <div class="day">
+        <div class="day-title">Day 2 — Website Login Page</div>
+        <ul class="day-points">
+          <li>Introduction to dev tools</li>
+          <li>SQL injection</li>
+        </ul>
+      </div>
+
+      <div class="day">
+        <div class="day-title">Day 3 — Introduction to Cryptography</div>
+        <ul class="day-points">
+          <li>Simple ciphers</li>
+          <li>Basics of RSA</li>
+          <li>Diffie-Hellman key exchange</li>
+        </ul>
+      </div>
+
+      <div class="day">
+        <div class="day-title">Day 4 — Reverse Engineering: Breaking Licence Checkers</div>
+        <ul class="day-points">
+          <li>Program compilation and execution</li>
+          <li>Disassembler vs decompiler vs debugger</li>
+          <li>Basic x86 instruction set</li>
+          <li>Walkthrough of a licence checker</li>
+        </ul>
+      </div>
+
+      <div class="day">
+        <div class="day-title">Day 5 — Exploitation of Binaries: Ret2Win</div>
+        <ul class="day-points">
+          <li>Components of a program</li>
+          <li>Stack and heap memory</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="statusBox" class="status"></div>
+
+    <div id="closedCard" class="closed-card" style="display:none;">
+      <h2>Registration Closed</h2>
+      <p>All 50 spots have been filled. Thanks for your interest!</p>
+    </div>
+
+    <form id="regForm">
+      <label>
+        Name
+        <input type="text" name="name" required placeholder="e.g. Priya Nair" />
+      </label>
+
+      <label>
+        Roll Number
+        <span class="hint">Format: AM.XX.XXXXXXXX</span>
+        <input type="text" name="roll_number" required placeholder="e.g. AM.CS.U4CSE21123" />
+      </label>
+
+      <label>
+        Branch
+        <input type="text" name="branch" required placeholder="e.g. Computer Science" />
+      </label>
+
+      <label>
+        Phone Number
+        <span class="hint">Format: +91 XXXXXXXXXX</span>
+        <input type="tel" name="phone" required placeholder="+91 9876543210" pattern="\+91\s?[0-9]{10}" title="Format: +91 followed by a 10-digit number, e.g. +91 9876543210" />
+      </label>
+
+      <label>
+        Email ID
+        <input type="email" name="email" required placeholder="you@example.com" />
+      </label>
+
+      <div class="pay-step">
+        <div class="step-title">Step 1 — Pay ₹999</div>
+        <p class="step-desc">Scan the QR below to pay via your UPI app.</p>
+        <img src="./image.png" alt="UPI QR code" style="max-width:220px; margin:0 auto; display:block;" />
+        <div class="upi-fallback">
+          On a laptop? Pay manually to <code id="upiIdText"></code>
+          <button type="button" class="copy-btn" id="copyUpiBtn">Copy</button>
+        </div>
+      </div>
+
+      <label>
+        Step 2 — Upload payment screenshot
+        <input type="file" name="screenshot" id="screenshotInput" accept="image/png,image/jpeg,image/webp" required />
+      </label>
+
+      <button type="submit">Submit Registration</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const CAPACITY = 50;
+
+    const form = document.getElementById('regForm');
+    const statusBox = document.getElementById('statusBox');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const spotsLabel = document.getElementById('spotsLabel');
+    const closedCard = document.getElementById('closedCard');
+
+    const copyUpiBtn = document.getElementById('copyUpiBtn');
+    const upiIdText = document.getElementById('upiIdText');
+    upiIdText.textContent = UPI_ID || '';
+    copyUpiBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(upiIdText.textContent);
+        copyUpiBtn.textContent = 'Copied!';
+      } catch (err) {
+        copyUpiBtn.textContent = 'Select & copy manually';
+      }
+      setTimeout(() => { copyUpiBtn.textContent = 'Copy'; }, 1500);
+    });
+
+    function showStatus(text, type) {
+      statusBox.textContent = text;
+      statusBox.className = 'status show ' + type;
+    }
+
+    function setBusy(isBusy, label) {
+      submitBtn.disabled = isBusy;
+      submitBtn.textContent = label;
+    }
+
+    function showClosed() {
+      form.style.display = 'none';
+      closedCard.style.display = 'block';
+      spotsLabel.innerHTML = '<strong>' + CAPACITY + ' / ' + CAPACITY + '</strong> spots filled';
+    }
+
+    async function getCount() {
+      const { data, error } = await supabaseClient.rpc('get_registration_count');
+      if (error) {
+        console.error(error);
+        return null;
+      }
+      return data;
+    }
+
+    async function refreshSpotsLabel() {
+      const count = await getCount();
+      if (count === null) {
+        spotsLabel.textContent = '';
+        return count;
+      }
+      if (count >= CAPACITY) {
+        showClosed();
+      } else {
+        spotsLabel.innerHTML = '<strong>' + count + ' / ' + CAPACITY + '</strong> spots filled';
+      }
+      return count;
+    }
+
+    async function uploadScreenshot(file) {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+      const { error } = await supabaseClient.storage
+        .from('payment-screenshots')
+        .upload(path, file, { upsert: false, contentType: file.type });
+      if (error) throw error;
+      return path;
+    }
+
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      statusBox.className = 'status';
+
+      const fd = new FormData(form);
+      const file = fd.get('screenshot');
+      if (!file || file.size === 0) {
+        showStatus('Please attach a screenshot of your payment.', 'error');
+        return;
+      }
+
+      setBusy(true, 'Checking availability...');
+      const count = await refreshSpotsLabel();
+      if (count !== null && count >= CAPACITY) {
+        setBusy(false, 'Submit Registration');
+        return;
+      }
+
+      const payload = {
+        name: fd.get('name').trim(),
+        roll_number: fd.get('roll_number').trim(),
+        branch: fd.get('branch').trim(),
+        phone: fd.get('phone').trim(),
+        email: fd.get('email').trim()
+      };
+
+      setBusy(true, 'Uploading screenshot...');
+      let screenshotPath;
+      try {
+        screenshotPath = await uploadScreenshot(file);
+      } catch (err) {
+        console.error(err);
+        showStatus('Could not upload screenshot. Please try again.', 'error');
+        setBusy(false, 'Submit Registration');
+        return;
+      }
+
+      setBusy(true, 'Saving registration...');
+      const { error } = await supabaseClient
+        .from('registrations')
+        .insert({ ...payload, screenshot_path: screenshotPath });
+
+      if (error) {
+        console.error(error);
+        supabaseClient.storage.from('payment-screenshots').remove([screenshotPath]);
+        if (error.message && error.message.toLowerCase().includes('capacity')) {
+          showClosed();
+        } else {
+          showStatus('Could not save your registration: ' + error.message, 'error');
+          setBusy(false, 'Submit Registration');
+        }
+        return;
+      }
+
+      form.reset();
+      showStatus("You're registered! We'll be in touch by email.", 'success');
+      setBusy(false, 'Submit Registration');
+      refreshSpotsLabel();
+    });
+
+    refreshSpotsLabel();
+  </script>
+</body>
+</html>

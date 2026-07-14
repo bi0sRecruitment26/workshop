@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Registrations</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f3f4f6;
+    color: #1f2937;
+    margin: 0;
+    padding: 32px 16px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+
+  /* Login card */
+  .login-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 28px;
+    width: 100%;
+    max-width: 340px;
+  }
+  .card h1 { font-size: 1.3rem; margin-top: 0; margin-bottom: 18px; }
+  .card label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 14px;
+  }
+  .card input {
+    font-size: 0.95rem;
+    padding: 9px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+  }
+  .card button {
+    width: 100%;
+    background: #111827;
+    color: #fff;
+    border: none;
+    padding: 11px 16px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .card button:hover { background: #000; }
+
+  /* Dashboard */
+  .top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  h1.dash { font-size: 1.4rem; margin: 0; }
+  .count { color: #6b7280; font-size: 0.9rem; }
+  a.logout, button.logout {
+    color: #6b7280;
+    font-size: 0.85rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  a.logout:hover, button.logout:hover { text-decoration: underline; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 0.88rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f1f3;
+    vertical-align: top;
+  }
+  th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  tr:last-child td { border-bottom: none; }
+  .empty { color: #9ca3af; padding: 24px; text-align: center; }
+  .del-btn, .view-btn {
+    background: none;
+    border: 1px solid #e5e7eb;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .del-btn { color: #dc2626; }
+  .del-btn:hover { background: #fee2e2; }
+  .view-btn { color: #2563eb; margin-right: 6px; }
+  .view-btn:hover { background: #dbeafe; }
+
+  .status {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .status.show { display: block; }
+  .status.error { background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+
+  <div id="loginView" class="login-wrap">
+    <div class="card">
+      <h1>Admin Login</h1>
+      <div id="loginStatus" class="status"></div>
+      <form id="loginForm">
+        <label>
+          Email
+          <input type="email" name="email" required autofocus />
+        </label>
+        <label>
+          Password
+          <input type="password" name="password" required />
+        </label>
+        <button type="submit">Log in</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="dashView" class="wrap" style="display:none;">
+    <div class="top">
+      <div>
+        <h1 class="dash">Workshop Registrations</h1>
+        <div class="count" id="countLabel">0 / 50 registered</div>
+      </div>
+      <button class="logout" id="logoutBtn">Log out</button>
+    </div>
+    <div id="dashStatus" class="status"></div>
+    <div id="tableWrap"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const CAPACITY = 50;
+
+    const loginView = document.getElementById('loginView');
+    const dashView = document.getElementById('dashView');
+    const loginForm = document.getElementById('loginForm');
+    const loginStatus = document.getElementById('loginStatus');
+    const dashStatus = document.getElementById('dashStatus');
+    const tableWrap = document.getElementById('tableWrap');
+    const countLabel = document.getElementById('countLabel');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    function escapeHtml(str) {
+      const d = document.createElement('div');
+      d.textContent = str == null ? '' : String(str);
+      return d.innerHTML;
+    }
+
+    async function checkSession() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        showDashboard();
+      } else {
+        showLogin();
+      }
+    }
+
+    function showLogin() {
+      loginView.style.display = 'flex';
+      dashView.style.display = 'none';
+    }
+
+    function showDashboard() {
+      loginView.style.display = 'none';
+      dashView.style.display = 'block';
+      loadRegistrations();
+    }
+
+    loginForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      loginStatus.className = 'status';
+      const fd = new FormData(loginForm);
+      const { error } = await supabaseClient.auth.signInWithPassword({
+        email: fd.get('email').trim(),
+        password: fd.get('password')
+      });
+      if (error) {
+        loginStatus.textContent = error.message;
+        loginStatus.className = 'status show error';
+      } else {
+        loginForm.reset();
+        showDashboard();
+      }
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      showLogin();
+    });
+
+    async function viewScreenshot(path) {
+      const { data, error } = await supabaseClient.storage
+        .from('payment-screenshots')
+        .createSignedUrl(path, 300);
+      if (error) {
+        alert('Could not load screenshot: ' + error.message);
+        return;
+      }
+      window.open(data.signedUrl, '_blank');
+    }
+
+    async function loadRegistrations() {
+      tableWrap.innerHTML = '<div class="empty">Loading...</div>';
+      dashStatus.className = 'status';
+
+      const { data, error } = await supabaseClient
+        .from('registrations')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error(error);
+        dashStatus.textContent = 'Could not load registrations: ' + error.message;
+        dashStatus.className = 'status show error';
+        tableWrap.innerHTML = '';
+        return;
+      }
+
+      countLabel.textContent = data.length + ' / ' + CAPACITY + ' registered';
+
+      if (data.length === 0) {
+        tableWrap.innerHTML = '<div class="empty">No registrations yet.</div>';
+        return;
+      }
+
+      let html = '<table><thead><tr>' +
+        '<th>Name</th><th>Roll Number</th><th>Branch</th><th>Phone</th><th>Email</th>' +
+        '<th>Submitted</th><th></th>' +
+        '</tr></thead><tbody>';
+
+      for (const r of data) {
+        const submitted = (r.created_at || '').replace('T', ' ').slice(0, 19);
+        html += '<tr data-id="' + r.id + '">' +
+          '<td>' + escapeHtml(r.name) + '</td>' +
+          '<td>' + escapeHtml(r.roll_number) + '</td>' +
+          '<td>' + escapeHtml(r.branch) + '</td>' +
+          '<td>' + escapeHtml(r.phone) + '</td>' +
+          '<td>' + escapeHtml(r.email) + '</td>' +
+          '<td>' + escapeHtml(submitted) + '</td>' +
+          '<td>' +
+            '<button class="view-btn" data-path="' + escapeHtml(r.screenshot_path) + '">Screenshot</button>' +
+            '<button class="del-btn" data-id="' + r.id + '" data-path="' + escapeHtml(r.screenshot_path) + '">Remove</button>' +
+          '</td>' +
+          '</tr>';
+      }
+      html += '</tbody></table>';
+      tableWrap.innerHTML = html;
+
+      tableWrap.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          viewScreenshot(btn.getAttribute('data-path'));
+        });
+      });
+
+      tableWrap.querySelectorAll('.del-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('Remove this registration?')) return;
+          const id = btn.getAttribute('data-id');
+          const path = btn.getAttribute('data-path');
+          const { error } = await supabaseClient.from('registrations').delete().eq('id', id);
+          if (error) {
+            alert('Could not delete: ' + error.message);
+            return;
+          }
+          if (path) {
+            await supabaseClient.storage.from('payment-screenshots').remove([path]);
+          }
+          loadRegistrations();
+        });
+      });
+    }
+
+    checkSession();
+  </script>
+</body>
+</html>
